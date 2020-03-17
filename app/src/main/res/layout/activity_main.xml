@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7000000"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/feedTitle"
+        android:layout_width="283dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/aguafina_script"
+        android:textColor="#ADECE4E4"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toStartOf="@+id/btShuffle"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Image Title" />
+
+    <TextView
+        android:id="@+id/tvImageDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="360dp"
+        android:text="TextView"
+        android:textColor="#ADECE4E4"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/feedNumber"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="384dp"
+        android:text="Image number"
+        android:textAlignment="center"
+        android:textColor="#ADECE4E4"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btShuffle"
+        android:layout_width="21dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/baseline_shuffle_white_18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/feedTitle"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/rbGroup"
+        android:layout_width="275dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="416dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sort"
+            android:textColor="#ADECE4E4"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rbTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="#ADECE4E4"
+            android:checked="true"
+            android:text="Title"
+            android:textColor="#ADECE4E4" />
+
+        <RadioButton
+            android:id="@+id/rbId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="#ADECE4E4"
+            android:text="Id"
+            android:textColor="#ADECE4E4" />
+
+        <RadioButton
+            android:id="@+id/rbTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="#ADECE4E4"
+            android:text="Time"
+            android:textColor="#ADECE4E4" />
+    </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/cbDescFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="544dp"
+        android:background="#00ECE4E4"
+        android:buttonTint="#ADECE4E4"
+        android:text="only show images with description"
+        android:textColor="#ADECE4E4"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="385dp"
+        android:layout_height="258dp"
+        android:layout_marginTop="96dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.615"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/img1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
