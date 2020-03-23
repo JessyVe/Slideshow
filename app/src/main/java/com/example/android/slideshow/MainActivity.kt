@@ -2,15 +2,14 @@ package com.example.android.slideshow
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
+import kotlinx.coroutines.*
 import model.Feed
 import service.Filter
 import service.SharedPreference
 import service.Slideshow
 import service.SortOption
-import java.io.Console
-import java.lang.Exception
 import java.time.LocalDateTime
 import kotlin.properties.Delegates
 
@@ -24,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     var cbDescFilter:CheckBox? = null
     var btShuffle:Button? = null
     var rbGroup:RadioGroup? = null
+
+    var progressBar:ProgressBar? = null
 
     var totalSlideCount:Int = 0
 
@@ -40,6 +41,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Coroutines
+        progressBar = findViewById(R.id.progressBar)
+        progressBar?.visibility = View.INVISIBLE
+        GlobalScope.async { showProgressBar() }
 
         addSomeDemoSlideshowData()
         totalSlideCount = Slideshow.getTotalImageCount()
@@ -127,6 +133,12 @@ class MainActivity : AppCompatActivity() {
 
         // Save current image index.
         sharedPreference?.save(lastSlideIndex, Slideshow.getCurrentImageIndex())
+    }
+
+    fun showProgressBar() {
+        progressBar?.visibility = View.VISIBLE
+        Thread.sleep(7000)
+        progressBar?.visibility = View.INVISIBLE
     }
 
     private fun addSomeDemoSlideshowData(){
