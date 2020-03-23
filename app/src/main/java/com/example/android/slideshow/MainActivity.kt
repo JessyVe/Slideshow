@@ -2,6 +2,7 @@ package com.example.android.slideshow
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Contacts
 import android.view.View
 import android.widget.*
 import kotlinx.coroutines.*
@@ -42,11 +43,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Coroutines
-        progressBar = findViewById(R.id.progressBar)
-        progressBar?.visibility = View.INVISIBLE
-        GlobalScope.async { showProgressBar() }
-
         addSomeDemoSlideshowData()
         totalSlideCount = Slideshow.getTotalImageCount()
 
@@ -59,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         cbDescFilter = findViewById(R.id.cbDescFilter)
         btShuffle = findViewById(R.id.btShuffle)
         rbGroup = findViewById(R.id.rbGroup)
+        progressBar = findViewById(R.id.progressBar)
 
         addEventListener()
         showNextFeed()
@@ -123,8 +120,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayFeed(newFeed:Feed) {
-        feedTextView?.text = newFeed.title
 
+        progressBar?.visibility = View.VISIBLE
+        GlobalScope.launch {
+            showProgressBar()  } // Co-routine call
+
+        feedTextView?.text = newFeed.title
         currentImageDescription = newFeed.description
         currentFeedNumber = Slideshow.getCurrentImageNumber()
 
@@ -135,10 +136,11 @@ class MainActivity : AppCompatActivity() {
         sharedPreference?.save(lastSlideIndex, Slideshow.getCurrentImageIndex())
     }
 
-    fun showProgressBar() {
-        progressBar?.visibility = View.VISIBLE
-        Thread.sleep(7000)
-        progressBar?.visibility = View.INVISIBLE
+   suspend fun showProgressBar() {
+       delay(7000)
+       runOnUiThread {
+           progressBar?.visibility = View.INVISIBLE
+       }
     }
 
     private fun addSomeDemoSlideshowData(){
