@@ -5,10 +5,10 @@ import model.Feed
 object Slideshow {
     private var slides = mutableListOf<Feed>()
     private var filteredSlides = mutableListOf<Feed>()
-    private var currentIndex:Int = -1
+    private var currentIndex : Int = -1
 
     private var activeFilters = mutableListOf<Filter>()
-    private var activeSortOption:SortOption = SortOption.TITLE
+    private var activeSortOption : SortOption = SortOption.TITLE
 
     fun getNextSlide() : Feed{
         return when (hasNext()) {
@@ -44,8 +44,17 @@ object Slideshow {
         refillFilteredList()
     }
 
-    fun getCurrentIndex() : Int{
+    fun getCurrentImageNumber() : Int{
         return currentIndex + 1
+    }
+
+    fun getCurrentImageIndex() : Int{
+        return currentIndex
+    }
+
+    fun setCurrentImageIndex(newIndex : Int) {
+        if(newIndex + 1 <= getTotalImageCount() - 1 && newIndex + 1 >= 0)
+            currentIndex = newIndex
     }
 
     fun getTotalImageCount() : Int {
@@ -67,7 +76,7 @@ object Slideshow {
 
         if(activeFilters.isEmpty()){
             filteredSlides = slides.toMutableList()
-        }else {
+        } else {
             slides.forEach { slide ->
                 activeFilters.forEach { filter ->
                     when (filter) {
