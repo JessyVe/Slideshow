@@ -2,20 +2,27 @@ package com.example.android.slideshow
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.StrictMode
 import android.provider.Contacts
 import android.view.View
 import android.widget.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory
 import kotlinx.coroutines.*
 import model.Feed
 import service.Filter
 import service.SharedPreference
 import service.Slideshow
 import service.SortOption
+import java.net.HttpURLConnection
+import java.net.URL
 import java.time.LocalDateTime
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
-
+    val url : String = "https://api.myjson.com/bins/1cve3s" // Api link here
     val lastSlideIndex : String = "LAST_SLIDE_INDEX"
 
     var sharedPreference: SharedPreference? = null
@@ -40,6 +47,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val SDK_INT = android.os.Build.VERSION.SDK_INT
+        if (SDK_INT > 8) {
+            val policy = StrictMode.ThreadPolicy.Builder()
+                .permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -80,7 +94,6 @@ class MainActivity : AppCompatActivity() {
         cbDescFilter?.setOnCheckedChangeListener { _, isChecked ->
             toggleFilter(Filter.DESCRIPTION, isChecked)
         }
-
         btShuffle?.setOnClickListener { shuffleImages() }
         rbGroup?.setOnCheckedChangeListener { _, checkedId -> sortImages(checkedId) }
     }
@@ -120,10 +133,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayFeed(newFeed:Feed) {
-
         progressBar?.visibility = View.VISIBLE
-        GlobalScope.launch {
-            showProgressBar()  } // Co-routine call
+        // Co-routine call
+        GlobalScope.launch { showProgressBar() }
 
         feedTextView?.text = newFeed.title
         currentImageDescription = newFeed.description
@@ -132,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         val resId = resources.getIdentifier(newFeed.imageUrl, "drawable", packageName)
         feedImageView?.setImageResource(resId)
 
-        // Save current image index.
+        // Save current image index
         sharedPreference?.save(lastSlideIndex, Slideshow.getCurrentImageIndex())
     }
 
@@ -144,10 +156,44 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addSomeDemoSlideshowData(){
-        Slideshow.addFeed(Feed("Coffee", "Developers fuel", LocalDateTime.now(), "img3", "Dublin"))
-        Slideshow.addFeed(Feed("On the beach", "Beach of Irland", LocalDateTime.now(), "img2", null))
-        Slideshow.addFeed(Feed("Half a penny bridge", "", LocalDateTime.now(), "img1", "Dublin"))
-        Slideshow.addFeed(Feed("Cows", "", LocalDateTime.now(), "img4", null))
-        Slideshow.addFeed(Feed("Cliffs of Moher", "An awesome view", LocalDateTime.now(), "img5", null))
+
+        var slides = loadApiData()
+        if(slides.isEmpty()){
+            Slideshow.addFeed(Feed("Coffee", "Developers fuel", LocalDateTime.now(), "img3", "Dublin"))
+            Slideshow.addFeed(Feed("On the beach", "Beach of Irland", LocalDateTime.now(), "img2", null))
+            Slideshow.addFeed(Feed("Half a penny bridge", "", LocalDateTime.now(), "img1", "Dublin"))
+            Slideshow.addFeed(Feed("Cows", "", LocalDateTime.now(), "img4", null))
+            Slideshow.addFeed(Feed("Cliffs of Moher", "An awesome view", LocalDateTime.now(), "img5", null))
+        } else {
+            slides.forEach { slide ->
+                Slideshow.addFeed(slide)
+            }
+        }
+    }
+
+    private fun loadApiData() : List<Feed> {
+        return try {
+            val connection = URL(url).openConnection() as HttpURLConnection
+            connection.connect()
+
+            val jsonString = connection.inputStream.use { conn ->
+                conn.reader().use { reader -> reader.readText() }
+            }
+            deserializeJsonString(jsonString)
+        } catch (ex : Exception) {
+            print("Error while accessing API $url. The following error occurred: $ex")
+            listOf()
+        }
+    }
+
+    private fun deserializeJsonString(resultText : String) : List<Feed> {
+        return try {
+            val objectType = object : TypeToken<List<Feed>>() {}.type
+            Gson().fromJson<List<Feed>>(resultText, objectType)
+
+        } catch(ex : java.lang.Exception){
+            print("Unable to deserialize Json. The following error occurred: $ex")
+            listOf()
+        }
     }
 }

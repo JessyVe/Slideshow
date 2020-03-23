@@ -10,6 +10,10 @@ object Slideshow {
     private var activeFilters = mutableListOf<Filter>()
     private var activeSortOption : SortOption = SortOption.TITLE
 
+    fun getAllSlides():List<Feed>{
+        return slides
+    }
+
     fun getNextSlide() : Feed{
         return when (hasNext()) {
             true -> filteredSlides[++currentIndex]

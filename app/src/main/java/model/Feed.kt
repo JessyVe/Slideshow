@@ -8,10 +8,12 @@ data class Feed(val title : String,
                 val imageUrl : String = "default",
                 val gspLocation : String?)
 {
+    @delegate:Transient
     val base64ImageString: String by lazy {
         loadTheImageBase64()
     }
 
+    @delegate:Transient
     val sound: String by lazy {
         loadingSoundFromFilesystem()
     }
