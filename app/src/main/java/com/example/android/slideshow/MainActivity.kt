@@ -3,13 +3,10 @@ package com.example.android.slideshow
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
-import android.provider.Contacts
 import android.view.View
 import android.widget.*
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory
 import kotlinx.coroutines.*
 import model.Feed
 import service.Filter
@@ -47,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Thread policy for internet access
         val SDK_INT = android.os.Build.VERSION.SDK_INT
         if (SDK_INT > 8) {
             val policy = StrictMode.ThreadPolicy.Builder()
@@ -57,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        addSomeDemoSlideshowData()
+        addStaticDemoSlideshowData()
         totalSlideCount = Slideshow.getTotalImageCount()
 
         // Restore saved data
@@ -73,6 +71,12 @@ class MainActivity : AppCompatActivity() {
 
         addEventListener()
         showNextFeed()
+
+        // Co-routine call
+        GlobalScope.launch {
+            addWebHostedDemoSlideshowData()
+            totalSlideCount = Slideshow.getTotalImageCount()
+        }
     }
 
     private fun onRestoreLastIndex() {
@@ -149,22 +153,20 @@ class MainActivity : AppCompatActivity() {
     }
 
    suspend fun showProgressBar() {
-       delay(7000)
+       delay(5000)
        runOnUiThread {
            progressBar?.visibility = View.INVISIBLE
        }
     }
 
-    private fun addSomeDemoSlideshowData(){
+    private fun addStaticDemoSlideshowData(){
+        Slideshow.addFeed(Feed("Cows", "", LocalDateTime.now(), "img4", null))
+        Slideshow.addFeed(Feed("Cliffs of Moher", "An awesome view", LocalDateTime.now(), "img5", null))
+    }
 
+    private fun addWebHostedDemoSlideshowData() {
         var slides = loadApiData()
-        if(slides.isEmpty()){
-            Slideshow.addFeed(Feed("Coffee", "Developers fuel", LocalDateTime.now(), "img3", "Dublin"))
-            Slideshow.addFeed(Feed("On the beach", "Beach of Irland", LocalDateTime.now(), "img2", null))
-            Slideshow.addFeed(Feed("Half a penny bridge", "", LocalDateTime.now(), "img1", "Dublin"))
-            Slideshow.addFeed(Feed("Cows", "", LocalDateTime.now(), "img4", null))
-            Slideshow.addFeed(Feed("Cliffs of Moher", "An awesome view", LocalDateTime.now(), "img5", null))
-        } else {
+        if(slides.isNotEmpty()){
             slides.forEach { slide ->
                 Slideshow.addFeed(slide)
             }
