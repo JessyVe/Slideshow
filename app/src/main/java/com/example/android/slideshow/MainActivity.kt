@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         sharedPreference = SharedPreference(this)
         onRestoreLastIndex()
 
+        // Load UI elements
         feedTextView = findViewById(R.id.feedTitle)
         feedImageView = findViewById(R.id.imageView5)
         cbDescFilter = findViewById(R.id.cbDescFilter)
@@ -138,6 +139,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayFeed(newFeed:Feed) {
         progressBar?.visibility = View.VISIBLE
+        
         // Co-routine call
         GlobalScope.launch { showProgressBar() }
 

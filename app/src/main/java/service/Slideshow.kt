@@ -5,16 +5,13 @@ import model.Feed
 object Slideshow {
     private var slides = mutableListOf<Feed>()
     private var filteredSlides = mutableListOf<Feed>()
+
     private var currentIndex : Int = -1
 
     private var activeFilters = mutableListOf<Filter>()
     private var activeSortOption : SortOption = SortOption.TITLE
 
-    fun getAllSlides():List<Feed>{
-        return slides
-    }
-
-    fun getNextSlide() : Feed{
+    fun getNextSlide() : Feed {
         return when (hasNext()) {
             true -> filteredSlides[++currentIndex]
             false -> {
@@ -24,7 +21,7 @@ object Slideshow {
         }
     }
 
-    fun getPreviousSlide() : Feed{
+    fun getPreviousSlide() : Feed {
         return when (hasPrevious()) {
             true -> filteredSlides[--currentIndex]
             false -> filteredSlides[currentIndex]
@@ -93,7 +90,6 @@ object Slideshow {
             }
         }
         sortImages(activeSortOption)
-        resetSlideShow()
     }
 
     fun shuffleImages(){
