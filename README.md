@@ -1,6 +1,7 @@
 # Slideshow
 **EDUCATION Repository**
-This Repository acts as a showcase for simple image slideshow providing the following features:
+
+This Repository acts as a showcase for a simple image slideshow providing the following features:
 - Image sorting 
 - Image shuffeling
 - Exclusion of images based on certain criteria
